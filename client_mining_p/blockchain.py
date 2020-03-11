@@ -15,13 +15,13 @@ class Blockchain(object):
 
         self.new_block(previous_hash=1, proof=100)
 
-    def new_block(self, previous_hash, proof):
+    def new_block(self, proof, previous_hash=None):
         block = {
             "index": len(self.chain) + 1,
             "timestamp": time(),
             "transactions": self.current_transactions,
             "proof": proof,
-            "previous_hash": previous_hash or self.hash(self.last_block)
+            "previous_hash": previous_hash or self.hash(self.chain[:-1])
 
         }
 
@@ -85,8 +85,7 @@ def get_last_block():
 @app.route('/mine', methods=['POST'])
 def mine():
     data = request.get_json()
-    print(f"data: {data}")
-    
+
     if data["proof"] is None or data["id"] is None:
         response = {
             "message": "INVALID, proof and/or id must be supplied!"
@@ -99,7 +98,7 @@ def mine():
 
     if new_hash is True:
         if blockchain.last_block["proof"] != proof:
-            new_block = blockchain.new_block(proof, blockchain.last_block['previous_hash'])
+            new_block = blockchain.new_block(proof)
             
             response = {
                 "message": "New Block Forged",
@@ -107,6 +106,11 @@ def mine():
             }
             
             return jsonify(response), 201
+        else:
+            response = {
+                "message": "unable to create new block, block already claimed."
+            }
+            return jsonify(response), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
