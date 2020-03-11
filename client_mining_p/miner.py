@@ -3,6 +3,8 @@ import requests
 
 import sys
 import json
+from time import time
+import math
 
 from blockchain import DIFFICULTY
 
@@ -45,6 +47,7 @@ if __name__ == '__main__':
     f.close()
 
     # Run forever until interrupted
+    start_time = time()
     while True:
         r = requests.get(url=node + "/last_block")
         # Handle non-json response
@@ -71,7 +74,7 @@ if __name__ == '__main__':
         
         if data["message"] == "New Block Forged":
             coins += 1
-            print(f"coins mined: {coins}")
+            print(f"coins mined: {coins} in {math.floor(time() - start_time)} seconds")
         else:
             print(f"{data['message']}")
 
