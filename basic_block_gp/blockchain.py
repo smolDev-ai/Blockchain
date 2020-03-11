@@ -39,8 +39,8 @@ class Blockchain(object):
             "index": len(self.chain) + 1,
             "timestamp": time(),
             "transactions": self.current_transactions,
-            "Proof": proof,  # some hash here?
-            "Previous": previous_hash or self.hash(self.chain[-1]),  # genesis block is the first so, fake it?
+            "proof": proof,  # some hash here?
+            "previous_hash": previous_hash or self.hash(self.last_block),  # genesis block is the first so, fake it?
         }
 
         # Reset the current list of transactions
@@ -115,7 +115,7 @@ class Blockchain(object):
         """
         guess = f"{block_string}{proof}".encode()
         guessing_hash = hashlib.sha256(guess).hexdigest()
-        return guessing_hash[:3] == 000
+        return guessing_hash[:3] == "000"
 
 
 
