@@ -6,11 +6,6 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 
 
-# DONE: Create the Block
-# DONE: Add the Hash
-# DONE: Proof of Work
-# DONE: Valid Proof
-
 class Blockchain(object):
     def __init__(self):
         self.chain = []
