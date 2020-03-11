@@ -8,8 +8,8 @@ from flask import Flask, jsonify, request
 
 # DONE: Create the Block
 # DONE: Add the Hash
-# TODO: Proof of Work
-# TODO: Valid Proof
+# DONE: Proof of Work
+# DONE: Valid Proof
 
 class Blockchain(object):
     def __init__(self):
@@ -81,7 +81,7 @@ class Blockchain(object):
         # hash to a string of hexadecimal characters, which is
         # easier to work with and understand
 
-        # TODO: Return the hashed block string in hexadecimal format
+        # DONE: Return the hashed block string in hexadecimal format
         return hash_string
 
     @property
@@ -153,7 +153,7 @@ def mine():
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
-        # TODO: Return the chain and its current length
+        # DONE: Return the chain and its current length
         "chain": blockchain.chain,
         "length": len(blockchain.chain),
     }
