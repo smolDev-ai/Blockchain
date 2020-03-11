@@ -40,7 +40,7 @@ class Blockchain(object):
             "timestamp": time(),
             "transactions": self.current_transactions,
             "Proof": proof,  # some hash here?
-            "Previous": previous_hash or self.chain[-1],  # genesis block is the first so, fake it?
+            "Previous": previous_hash or self.hash(self.chain[-1]),  # genesis block is the first so, fake it?
         }
 
         # Reset the current list of transactions
@@ -71,9 +71,8 @@ class Blockchain(object):
 
         new_string = json.dumps(block, sort_keys=True)
         block_string = new_string.encode()
-        raw = hashlib.sha256(block_string)
-
-        hash_string = raw.hexdigest()
+        
+        hash_string = hashlib.sha256(block_string).hexdigest()
 
         # By itself, the sha256 function returns the hash in a raw string
         # that will likely include escaped characters.
