@@ -61,9 +61,6 @@ class Blockchain(object):
         # We must make sure that the Dictionary is Ordered,
         # or we'll have inconsistent hashes
 
-        # DONE: Create the block_string
-        # DONE: Hash this string using sha256
-
         new_string = json.dumps(block, sort_keys=True)
         block_string = new_string.encode()
         
@@ -74,8 +71,6 @@ class Blockchain(object):
         # This can be hard to read, but .hexdigest() converts the
         # hash to a string of hexadecimal characters, which is
         # easier to work with and understand
-
-        # DONE: Return the hashed block string in hexadecimal format
         return hash_string
 
     @property
@@ -147,7 +142,6 @@ def mine():
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
-        # DONE: Return the chain and its current length
         "chain": blockchain.chain,
         "length": len(blockchain.chain),
     }
