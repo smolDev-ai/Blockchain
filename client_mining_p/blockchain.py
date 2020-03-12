@@ -15,6 +15,11 @@ class Blockchain(object):
 
         self.new_block(previous_hash=1, proof=100)
 
+    def new_transaction(self, sender, recipient, amount):
+        self.current_transactions.append({'sender': sender, "recipient": recipient, "amount": amount})
+
+        return self.last_block['index'] + 1
+
     def new_block(self, proof, previous_hash=None):
         block = {
             "index": len(self.chain) + 1,
@@ -98,8 +103,9 @@ def mine():
 
     if new_hash is True:
         if blockchain.last_block["proof"] != proof:
+            blockchain.new_transaction(0, data['id'], 1)
             new_block = blockchain.new_block(proof)
-            
+      
             response = {
                 "message": "New Block Forged",
                 "new_block": new_block,
@@ -111,6 +117,55 @@ def mine():
                 "message": "unable to create new block, block already claimed."
             }
             return jsonify(response), 200
+
+@app.route('/transaction/new', methods=['POST'])
+def receive_transaction():
+    values = request.get_json()
+    required = ['sender', 'recipient', 'amount']
+
+    if not all(k in values for k in required):
+        response = {
+            "message": "You're missing required fields, please check your request and try again."
+        }
+        return jsonify(response), 401
+
+    index = blockchain.new_transaction(*values)
+
+    response = {
+        "message": f"Transaction will be added to block: {index}"
+    }
+
+    return jsonify(response), 201
+
+
+@app.route('/wallet/<user>')
+def wallet(user):
+    balance = 0
+    remove_funds = []
+    add_funds = []
+    # loop through the chain find the current transactions of the link
+    # if user is the sender subtract the amount they sent
+    # if user is the recipient add the amount the received        
+
+    for block in blockchain.chain:
+        for transaction in block.transactions:
+            if transaction['sender'] == user:
+                balance -= transaction['amount']
+                remove_funds.append(transaction)
+            if transaction['recipient'] == user:
+                balance += transaction['amount']
+                add_funds.append(transaction)
+    response = {
+        "user": user,
+        "balance": balance,
+        "negative_transactions": remove_funds,
+        "positive_transactions": add_funds
+    }
+    
+    return jsonify(response), 200
+
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
