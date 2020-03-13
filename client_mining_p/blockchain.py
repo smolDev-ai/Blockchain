@@ -4,6 +4,7 @@ from time import time
 from uuid import uuid4
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 DIFFICULTY = "000000"
 
@@ -56,6 +57,7 @@ class Blockchain(object):
         return guessing_hash[:6] == DIFFICULTY
 
 app = Flask(__name__)
+CORS(app)
 
 node_identifier = str(uuid4()).replace('-', '')
 
